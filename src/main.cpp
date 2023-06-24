@@ -4,8 +4,8 @@
 
 #include "svg.h"
 
-const size_t SCREEN_WIDTH = 80;
-const size_t MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
+const auto SCREEN_WIDTH = 80;
+const auto MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
 
 std::vector<double> input_numbers(size_t count);
 void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
@@ -52,8 +52,10 @@ void show_histogram(std::vector<double> bins, std::vector<std::string> labels, s
 void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
 	size_t max_count = bins[0];
 	for (size_t i = 1; i < bin_count; i++) {
-		if (max_count < bins[i]) max_count = bins[i];
+		if (max_count < bins[i])
+			max_count = bins[i];
 	}
+
 	for (size_t i = 0; i < bin_count; i++) {
 		std::cerr.width(longest_label.length());
 		std::cerr << std::right << labels[i] << '|';
@@ -70,6 +72,29 @@ void show_histogram_svg(std::vector<double> bins, std::vector<std::string> label
 	double top = 0;
 	for (size_t i = 0; i < bin_count; i++) {
 		const double bin_width = BLOCK_WIDTH * bins[i];
+		svg_text(TEXT_LEFT, top + TEXT_BASELINE, labels[i]);
+		svg_rect(TEXT_WIDTH + longest_label.length(), top, bin_width, BIN_HEIGHT, get_random_color(), "black");
+		top += BIN_HEIGHT;
+	}
+
+	svg_end();
+}
+
+void show_histogram_scaling_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
+	double width = 400;
+	double height = 300;
+
+	svg_begin(width, height);
+
+	size_t max_count = bins[0];
+	for (size_t i = 1; i < bin_count; i++) {
+		if (max_count < bins[i])
+			max_count = bins[i];
+	}
+
+	double top = 0;
+	for (size_t i = 0; i < bin_count; i++) {
+		const double bin_width = static_cast<size_t>(width * 0.5 * (static_cast<double>(bins[i]) / max_count));
 		svg_text(TEXT_LEFT, top + TEXT_BASELINE, labels[i]);
 		svg_rect(TEXT_WIDTH + longest_label.length(), top, bin_width, BIN_HEIGHT, get_random_color(), "black");
 		top += BIN_HEIGHT;
@@ -139,5 +164,6 @@ void make_histogram(std::vector<double> numbers, size_t bin_count) {
 
 	//show_histogram(bins, labels, longest_label, bin_count);
 	//show_histogram_scaling(bins, labels, longest_label, bin_count);
-	show_histogram_svg(bins, labels, longest_label, bin_count);
+	//show_histogram_svg(bins, labels, longest_label, bin_count);
+	show_histogram_scaling_svg(bins, labels, longest_label, bin_count);
 }
