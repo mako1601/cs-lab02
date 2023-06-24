@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 
+#include "histogram.h"
 #include "svg.h"
 
 const auto SCREEN_WIDTH = 80;
@@ -11,7 +12,6 @@ std::vector<double> input_numbers(size_t count);
 void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
-void find_minmax(std::vector<double> numbers, double& min, double& max);
 void make_histogram(std::vector<double> numbers, size_t bin_count);
 
 int main() {
@@ -101,19 +101,6 @@ void show_histogram_scaling_svg(std::vector<double> bins, std::vector<std::strin
 	}
 
 	svg_end();
-}
-
-void find_minmax(std::vector<double> numbers, double& min, double& max) {
-	min = numbers[0];
-	max = numbers[0];
-	for (double x : numbers) {
-		if (x < min) {
-			min = x;
-		}
-		else if (x > max) {
-			max = x;
-		}
-	}
 }
 
 void make_histogram(std::vector<double> numbers, size_t bin_count) {
