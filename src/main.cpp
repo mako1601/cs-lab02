@@ -2,12 +2,15 @@
 #include <vector>
 #include <string>
 
+#include "svg.h"
+
 const size_t SCREEN_WIDTH = 80;
 const size_t MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
 
 std::vector<double> input_numbers(size_t count);
-void output_numbers(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
-void output_numbers_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
+void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
+void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
+void show_histogram_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void find_minmax(std::vector<double> numbers, double& min, double& max);
 void make_histogram(std::vector<double> numbers, size_t bin_count);
 
@@ -35,30 +38,44 @@ std::vector<double> input_numbers(size_t count) {
 	return result;
 }
 
-void output_numbers(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
+void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
 	for (size_t i = 0; i < bin_count; i++) {
-		std::cout.width(longest_label.length());
-		std::cout << std::right << labels[i] << '|';
+		//std::cerr.width(longest_label.length());
+		std::cerr << std::right << labels[i] << '|';
 		for (size_t j = 0; j < bins[i]; j++) {
-			std::cout << '*';
+			std::cerr << '*';
 		}
-		std::cout << std::endl;
+		std::cerr << std::endl;
 	}
 }
 
-void output_numbers_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
+void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
 	size_t max_count = bins[0];
 	for (size_t i = 1; i < bin_count; i++) {
 		if (max_count < bins[i]) max_count = bins[i];
 	}
 	for (size_t i = 0; i < bin_count; i++) {
-		std::cout.width(longest_label.length());
-		std::cout << std::right << labels[i] << '|';
+		std::cerr.width(longest_label.length());
+		std::cerr << std::right << labels[i] << '|';
 		for (size_t j = 0; j < static_cast<size_t>(MAX_ASTERISK * (static_cast<double>(bins[i]) / max_count)); j++) {
-			std::cout << '*';
+			std::cerr << '*';
 		}
-		std::cout << std::endl;
+		std::cerr << std::endl;
 	}
+}
+
+void show_histogram_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
+	svg_begin(400, 300);
+
+	double top = 0;
+	for (size_t i = 0; i < bin_count; i++) {
+		const double bin_width = BLOCK_WIDTH * bins[i];
+		svg_text(TEXT_LEFT, top + TEXT_BASELINE, labels[i]);
+		svg_rect(TEXT_WIDTH + longest_label.length(), top, bin_width, BIN_HEIGHT, get_random_color(), "black");
+		top += BIN_HEIGHT;
+	}
+
+	svg_end();
 }
 
 void find_minmax(std::vector<double> numbers, double& min, double& max) {
@@ -120,6 +137,7 @@ void make_histogram(std::vector<double> numbers, size_t bin_count) {
 		}
 	}
 
-	output_numbers(bins, labels, longest_label, bin_count);
-	output_numbers_scaling(bins, labels, longest_label, bin_count);
+	//show_histogram(bins, labels, longest_label, bin_count);
+	//show_histogram_scaling(bins, labels, longest_label, bin_count);
+	show_histogram_svg(bins, labels, longest_label, bin_count);
 }
