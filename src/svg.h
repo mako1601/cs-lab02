@@ -38,8 +38,13 @@ void svg_text(double left, double baseline, std::string text) {
     std::cout << "<text x='"<< left <<"' y='" << baseline << "'>" << text << "</text>";
 }
 
-void svg_rect(double x, double y, double width, double height, std::string color, std::string colorStroke) {
+void svg_rect(double x, double y, double width, double height, std::string color, std::string color_stroke) {
     std::cout << "<rect x='" << x << "' y='" << y << "' width='" << width << "' height='" << height << "' fill='" << color;
-    std::cout << "' stroke='" << colorStroke << "' stroke-width='" << 1;
+    std::cout << "' stroke='" << color_stroke << "' stroke-width='" << 1;
     std::cout <<"'/>";
+}
+
+void svg_line(double y, std::string color_stroke, double length_dash, double length_gap) {
+    std::cout << "<line x1='" << 0 << "' y1='" << y << "' x2 ='" << IMAGE_WIDTH << "' y2 ='" << y;
+    std::cout << "' stroke='" << color_stroke << "' stroke-dasharray='" << length_dash << " " << length_gap <<"'/>";
 }

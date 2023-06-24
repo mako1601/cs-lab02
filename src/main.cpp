@@ -12,7 +12,8 @@ std::vector<double> input_numbers(size_t count);
 void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
-void make_histogram(std::vector<double> numbers, size_t bin_count);
+void show_histogram_scaling_svg(std::vector<double>bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count, size_t length_dash, size_t length_gap);
+void make_histogram(std::vector<double> numbers, size_t bin_count, size_t length_dash, size_t length_gap);
 
 int main() {
 	// ¬вод данных
@@ -23,9 +24,14 @@ int main() {
 	const auto numbers = input_numbers(number_count);
 
 	size_t bin_count;
+	size_t length_dash, length_gap;
 	std::cerr << "Enter bin count: ";
 	std::cin >> bin_count;
-	make_histogram(numbers, bin_count);
+	std::cerr << "Enter length of the dash: ";
+	std::cin >> length_dash;
+	std::cerr << "Enter length of the gap: ";
+	std::cin >> length_gap;
+	make_histogram(numbers, bin_count, length_dash, length_gap);
 
 	return 0;
 }
@@ -67,7 +73,7 @@ void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> l
 }
 
 void show_histogram_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
-	svg_begin(400, 300);
+	svg_begin(IMAGE_WIDTH, IMAGE_HEIGHT);
 
 	double top = 0;
 	for (size_t i = 0; i < bin_count; i++) {
@@ -80,11 +86,8 @@ void show_histogram_svg(std::vector<double> bins, std::vector<std::string> label
 	svg_end();
 }
 
-void show_histogram_scaling_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count) {
-	double width = 400;
-	double height = 300;
-
-	svg_begin(width, height);
+void show_histogram_scaling_svg(std::vector<double>bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count, size_t length_dash, size_t length_gap) {
+	svg_begin(IMAGE_WIDTH, IMAGE_HEIGHT);
 
 	size_t max_count = bins[0];
 	for (size_t i = 1; i < bin_count; i++) {
@@ -94,16 +97,21 @@ void show_histogram_scaling_svg(std::vector<double> bins, std::vector<std::strin
 
 	double top = 0;
 	for (size_t i = 0; i < bin_count; i++) {
-		const double bin_width = static_cast<size_t>(width * 0.5 * (static_cast<double>(bins[i]) / max_count));
+		const double bin_width = static_cast<size_t>(IMAGE_WIDTH * 0.5 * (static_cast<double>(bins[i]) / max_count));
 		svg_text(TEXT_LEFT, top + TEXT_BASELINE, labels[i]);
 		svg_rect(TEXT_WIDTH + longest_label.length(), top, bin_width, BIN_HEIGHT, get_random_color(), "black");
 		top += BIN_HEIGHT;
+
+		if (i != bin_count - 1) {
+			svg_line(top + 4, "black", length_dash, length_gap);
+			top += 8;
+		}
 	}
 
 	svg_end();
 }
 
-void make_histogram(std::vector<double> numbers, size_t bin_count) {
+void make_histogram(std::vector<double> numbers, size_t bin_count, size_t length_dash, size_t length_gap) {
 	double min, max;
 	find_minmax(numbers, min, max);
 	std::vector<double> bins(bin_count);
@@ -152,5 +160,5 @@ void make_histogram(std::vector<double> numbers, size_t bin_count) {
 	//show_histogram(bins, labels, longest_label, bin_count);
 	//show_histogram_scaling(bins, labels, longest_label, bin_count);
 	//show_histogram_svg(bins, labels, longest_label, bin_count);
-	show_histogram_scaling_svg(bins, labels, longest_label, bin_count);
+	show_histogram_scaling_svg(bins, labels, longest_label, bin_count, length_dash, length_gap);
 }
