@@ -16,7 +16,7 @@ struct Input {
 };
 
 
-Input read_input(std::istream& in);
+Input read_input(std::istream& in, bool prompt);
 std::vector<double> input_numbers(std::istream& in, size_t count);
 void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
@@ -26,7 +26,7 @@ void make_histogram(Input data);
 
 int main() {
 	// ¬вод данных
-	Input data = read_input(std::cin);
+	Input data = read_input(std::cin, false);
 
 	// —оздание гистограммы
 	make_histogram(data);
@@ -34,22 +34,29 @@ int main() {
 	return 0;
 }
 
-Input read_input(std::istream& in) {
+Input read_input(std::istream& in, bool prompt) {
 	Input data;
-
-	std::cerr << "Enter number count: ";
 	size_t number_count;
-	in >> number_count;
 
-	std::cerr << "Enter numbers : ";
-	data.numbers = input_numbers(std::cin, number_count);
-	std::cerr << "Enter bin count: ";
-	in >> data.bin_count;
+	if (prompt) {
+		std::cerr << "Enter number count: ";
+		in >> number_count;
 
-	std::cerr << "Enter length of the dash: ";
-	in >> data.length_dash;
-	std::cerr << "Enter length of the gap: ";
-	in >> data.length_gap;
+		std::cerr << "Enter numbers : ";
+		data.numbers = input_numbers(std::cin, number_count);
+		std::cerr << "Enter bin count: ";
+		in >> data.bin_count;
+
+		std::cerr << "Enter length of the dash: ";
+		in >> data.length_dash;
+		std::cerr << "Enter length of the gap: ";
+		in >> data.length_gap;
+	}
+	else {
+		in >> number_count;
+		data.numbers = input_numbers(std::cin, number_count);
+		in >> data.bin_count >> data.length_dash >> data.length_gap;
+	}
 
 	return data;
 }
