@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <curl/curl.h>
 
 #include "histogram.h"
 #include "svg.h"
@@ -25,6 +26,7 @@ void show_histogram_scaling_svg(std::vector<double>bins, std::vector<std::string
 void make_histogram(Input data);
 
 int main() {
+	curl_global_init(CURL_GLOBAL_ALL);
 	// ¬вод данных
 	Input data = read_input(std::cin, false);
 
