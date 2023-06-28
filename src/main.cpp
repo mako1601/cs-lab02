@@ -8,6 +8,15 @@
 const auto SCREEN_WIDTH = 80;
 const auto MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
 
+struct Input {
+	std::vector<double> numbers;
+	size_t bin_count;
+	size_t length_dash;
+	size_t length_gap;
+};
+
+
+Input read_input(std::istream& in);
 std::vector<double> input_numbers(std::istream& in, size_t count);
 void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
@@ -17,23 +26,32 @@ void make_histogram(std::vector<double> numbers, size_t bin_count, size_t length
 
 int main() {
 	// ¬вод данных
-	size_t number_count;
-	std::cerr << "Enter number count: ";
-	std::cin >> number_count;
-	std::cerr << "Enter numbers : ";
-	const auto numbers = input_numbers(std::cin, number_count);
+	Input data = read_input(std::cin);
 
-	size_t bin_count;
-	size_t length_dash, length_gap;
-	std::cerr << "Enter bin count: ";
-	std::cin >> bin_count;
-	std::cerr << "Enter length of the dash: ";
-	std::cin >> length_dash;
-	std::cerr << "Enter length of the gap: ";
-	std::cin >> length_gap;
-	make_histogram(numbers, bin_count, length_dash, length_gap);
+	// —оздание гистограммы
+	make_histogram(data.numbers, data.bin_count, data.length_dash, data.length_gap);
 
 	return 0;
+}
+
+Input read_input(std::istream& in) {
+	Input data;
+
+	std::cerr << "Enter number count: ";
+	size_t number_count;
+	in >> number_count;
+
+	std::cerr << "Enter numbers : ";
+	data.numbers = input_numbers(std::cin, number_count);
+	std::cerr << "Enter bin count: ";
+	in >> data.bin_count;
+
+	std::cerr << "Enter length of the dash: ";
+	in >> data.length_dash;
+	std::cerr << "Enter length of the gap: ";
+	in >> data.length_gap;
+
+	return data;
 }
 
 std::vector<double> input_numbers(std::istream& in, size_t count) {
