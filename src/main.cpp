@@ -8,7 +8,7 @@
 const auto SCREEN_WIDTH = 80;
 const auto MAX_ASTERISK = SCREEN_WIDTH - 3 - 1;
 
-std::vector<double> input_numbers(size_t count);
+std::vector<double> input_numbers(std::istream& in, size_t count);
 void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_scaling(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
 void show_histogram_svg(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
@@ -21,7 +21,7 @@ int main() {
 	std::cerr << "Enter number count: ";
 	std::cin >> number_count;
 	std::cerr << "Enter numbers : ";
-	const auto numbers = input_numbers(number_count);
+	const auto numbers = input_numbers(std::cin, number_count);
 
 	size_t bin_count;
 	size_t length_dash, length_gap;
@@ -36,10 +36,10 @@ int main() {
 	return 0;
 }
 
-std::vector<double> input_numbers(size_t count) {
+std::vector<double> input_numbers(std::istream& in, size_t count) {
 	std::vector<double> result(count);
 	for (size_t i = 0; i < count; i++) {
-		std::cin >> result[i];
+		in >> result[i];
 	}
 	return result;
 }
