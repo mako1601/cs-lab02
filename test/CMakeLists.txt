@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25.2)
 
-add_executable(Test test.cpp ../src/histogram.cpp ../src/histogram.h)
+add_executable(Test test.cpp histogram.cpp histogram.h)
 
-set(CMAKE_CXX_STANDARD 17)
+target_compile_features(Test PUBLIC cxx_std_17)

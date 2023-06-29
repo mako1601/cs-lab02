@@ -16,7 +16,6 @@ struct Input {
 	size_t length_gap{};
 };
 
-
 Input read_input(std::istream& in, bool prompt);
 std::vector<double> input_numbers(std::istream& in, size_t count);
 void show_histogram(std::vector<double> bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count);
@@ -25,7 +24,13 @@ void show_histogram_svg(std::vector<double> bins, std::vector<std::string> label
 void show_histogram_scaling_svg(std::vector<double>bins, std::vector<std::string> labels, std::string longest_label, size_t bin_count, size_t length_dash, size_t length_gap);
 void make_histogram(Input data);
 
-int main() {
+int main(int argc, char* argv[]) {
+	if (argc > 1) {
+		for (int i = 0; i < argc; i++)
+			std::cout << argv[i] << '\n';
+		return 0;
+	}
+
 	// ¬вод данных
 	Input data = read_input(std::cin, false);
 
